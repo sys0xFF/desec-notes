@@ -1,7 +1,4 @@
-# The Red Journey - Networking Notes
-
-
-## UDP vs TCP
+# UDP vs TCP
 
 ### Differences Between UDP and TCP
 
