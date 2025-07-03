@@ -6,9 +6,15 @@ It's a 12-week structured experience into the world of Linux, networking, exploi
 Each module I study is documented here — with insights, commands, reflections, and tools tested along the way.  
 This is my digital war journal.
 
-![the-red-journey-girl](https://i.imgur.com/Q3Mzs9Q.png)
+## My Achievements
 
----
+<div align="left">
+  <img src="https://academy.desecsecurity.com/uploads/badges/skill_pentest_fundamentals_pro.png" width="150"/>
+  <img src="https://academy.desecsecurity.com/uploads/badges/network_analyst_pro.png" width="150"/>
+</div>
+
+
+![the-red-journey-girl](https://i.imgur.com/Q3Mzs9Q.png)
 
 ## Weekly Structure
 
