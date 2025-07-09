@@ -1,6 +1,6 @@
-# The Red Journey
+# Desec Notes
 
-**The Red Journey** is my personal path through the complete DESEC Security offensive pentesting course.  
+**desec-notes** is my personal path through the complete DESEC Security offensive pentesting course.  
 It's a 12-week structured experience into the world of Linux, networking, exploits, scripting, recon, and real-world red team ops.
 
 Each module I study is documented here — with insights, commands, reflections, and tools tested along the way.  
@@ -12,9 +12,6 @@ This is my digital war journal.
   <img src="https://academy.desecsecurity.com/uploads/badges/skill_pentest_fundamentals_pro.png" width="150"/>
   <img src="https://academy.desecsecurity.com/uploads/badges/network_analyst_pro.png" width="150"/>
 </div>
-
-
-![the-red-journey-girl](https://i.imgur.com/Q3Mzs9Q.png)
 
 ## Weekly Structure
 
