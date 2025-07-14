@@ -105,14 +105,6 @@ This is my digital war journal.
 
 ---
 
-## Why This Exists
-
-I’m not here to just finish a course — I’m here to absorb it, reshape it, and own it.  
-This repo is my structure for real growth. For retention, reflection, and skill sharpening.  
-If you’re walking a similar path — fork it, study, or just lurk. We move in silence.
-
----
-
 ## License
 
 MIT License. Learn, break, build — but do it consciously.
