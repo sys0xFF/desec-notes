@@ -11,6 +11,7 @@ This is my digital war journal.
 <div align="left">
   <img src="https://academy.desecsecurity.com/uploads/badges/skill_pentest_fundamentals_pro.png" width="150"/>
   <img src="https://academy.desecsecurity.com/uploads/badges/network_analyst_pro.png" width="150"/>
+  <img src="https://academy.desecsecurity.com/uploads/badges/skill_ctf_player_pro.png" width="150"/>
 </div>
 
 ## Weekly Structure
