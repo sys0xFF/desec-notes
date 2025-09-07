@@ -28,9 +28,9 @@ Penetration testers often need to pivot or access services hidden behind NAT/fir
 ### Example Scenario
 
 ```
-+-----------------------+       +-------------------------+
-|       Internet         | <---> |     Router (NAT)        |
-+-----------------------+       +-------------------------+
++-----------------------+        +-------------------------+
+|       Internet        |  <---> |     Router (NAT)        |
++-----------------------+        +-------------------------+
                                       |
                                       | forwards port 2222 -> 192.168.0.10:22
                                       |
